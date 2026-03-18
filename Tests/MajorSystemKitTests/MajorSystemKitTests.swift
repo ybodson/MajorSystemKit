@@ -8,6 +8,7 @@ import Testing
     #expect(encoder.encode(phonemes: ["SH", "EH1", "F"]) == "68")
     #expect(encoder.encode(phonemes: ["F", "OW1", "N"]) == "82")
     #expect(encoder.encode(phonemes: ["M", "IY1", "T", "ER0"]) == "314")
+    #expect(encoder.encode(phonemes: ["S", "IH1", "NG"]) == "07")
 }
 
 @Test func encoderKeepsOnlyConsonantPhonemes() {
@@ -27,6 +28,13 @@ import Testing
     let meter = try #require(index.entriesByCode["314"]?.first(where: { $0.word == "meter" }))
 
     #expect(meter.phonemes == ["M", "T", "R"])
+}
+
+@Test func bundledIndexKeepsDistinctPronunciationsForSameWordAndCode() throws {
+    let index = try MajorIndexLoader.loadBundledIndex()
+    let actualEntries = index.entriesByCode["765"]?.filter { $0.word == "actual" } ?? []
+
+    #expect(actualEntries.map(\.phonemes) == [["K", "CH", "L"], ["K", "SH", "L"]])
 }
 
 @Test func serviceReturnsSortedMatches() throws {

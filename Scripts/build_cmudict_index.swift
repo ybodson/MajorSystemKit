@@ -95,7 +95,7 @@ enum CMUDictBuilder {
             }
 
             let code = consonantPhonemes.compactMap { digitMap[$0] }.joined()
-            let key = SeenKey(word: word, code: code)
+            let key = SeenKey(word: word, code: code, phonemes: consonantPhonemes)
             guard seen.insert(key).inserted else {
                 continue
             }
@@ -172,6 +172,7 @@ enum CMUDictBuilder {
     private struct SeenKey: Hashable {
         let word: String
         let code: String
+        let phonemes: [String]
     }
 }
 

@@ -52,7 +52,7 @@ public struct MajorEncoder: MajorEncoding, Sendable {
             return 5
         case "CH", "JH", "SH", "ZH":
             return 6
-        case "K", "G":
+        case "K", "G", "NG":
             return 7
         case "F", "V":
             return 8
