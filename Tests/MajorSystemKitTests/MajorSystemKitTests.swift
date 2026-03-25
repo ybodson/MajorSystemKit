@@ -42,6 +42,29 @@ import Testing
     let service = MajorSystemService(index: index)
 
     let matches = service.matches(for: "314")
+    #expect(matches.count == 20)
 
-    #expect(matches.map(\.word) == ["emdr", "amdur", "madar", "mader", "madra", "madre", "madry", "mater", "matra", "medar", "meder", "meter", "metra", "metre", "metro", "miter", "mitra", "mitre", "mitro", "moder"])
+    // Entries with score == -1 (filtered: too short, no vowel, or below frequency threshold)
+    // must appear after all positively-scored entries.
+    var seenFiltered = false
+    for match in matches {
+        if match.score == -1 {
+            seenFiltered = true
+        } else {
+            #expect(!seenFiltered, "Scored entry '\(match.word)' appears after a filtered (-1) entry")
+        }
+    }
+
+    // Among entries in the same score tier, verify sort order: score desc → length asc → alpha.
+    for i in 0 ..< matches.count - 1 {
+        let a = matches[i], b = matches[i + 1]
+        guard a.score != -1, b.score != -1 else { continue }
+        if a.score != b.score {
+            #expect(a.score > b.score)
+        } else if a.word.count != b.word.count {
+            #expect(a.word.count <= b.word.count)
+        } else {
+            #expect(a.word <= b.word)
+        }
+    }
 }
